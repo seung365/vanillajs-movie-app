@@ -850,6 +850,8 @@ parcelHelpers.defineInteropFlag(exports);
 var _heropy = require("../core/heropy");
 var _movie = require("../store/movie");
 var _movieDefault = parcelHelpers.interopDefault(_movie);
+var _movieItem = require("./MovieItem");
+var _movieItemDefault = parcelHelpers.interopDefault(_movieItem);
 class MovieList extends (0, _heropy.Component) {
     constructor(){
         super();
@@ -863,13 +865,45 @@ class MovieList extends (0, _heropy.Component) {
       <div class="movies"></div>
     `;
         const moviesEl = this.el.querySelector(".movies");
-        moviesEl.append((0, _movieDefault.default).state.movies.map((movie)=>{
-            return movie.Title;
-        }));
+        moviesEl.append(...(0, _movieDefault.default).state.movies.map((movie)=>new (0, _movieItemDefault.default)({
+                movie
+            }).el) //map의 경우 함수를 실행한 결과를 모아 새로운 배열을 반환하고 append에 넣기 위해선 전개 연산자를 사용해야 한다.
+        );
     }
 }
 exports.default = MovieList;
 
-},{"../core/heropy":"57bZf","../store/movie":"kq1bo","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["anvqh","gLLPy"], "gLLPy", "parcelRequire6588")
+},{"../core/heropy":"57bZf","../store/movie":"kq1bo","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./MovieItem":"fAzE8"}],"fAzE8":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _heropy = require("../core/heropy");
+class MovieItem extends (0, _heropy.Component) {
+    constructor(props){
+        super({
+            props,
+            tagName: "a"
+        });
+    }
+    render() {
+        const { movie } = this.props;
+        this.el.setAttribute("href", `#/movie?id=${movie.imdbID}`);
+        this.el.classList.add("movie");
+        this.el.style.backgroundImage = `url(${movie.Poster})` // 이렇게 image가 아니라 backgroundImage로 하는 이유 : 출력되는 포스터 크기가 조금씩 다르기에, 크기를 전부 동일하게 출력하고 싶어서
+        ;
+        this.el.innerHTML = /* html */ `
+      <div class="info">
+        <div class="year">
+          ${movie.Year}
+        </div>
+        <div class="title">
+          ${movie.Title}
+        </div>
+      </div>
+    `;
+    }
+}
+exports.default = MovieItem;
+
+},{"../core/heropy":"57bZf","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["anvqh","gLLPy"], "gLLPy", "parcelRequire6588")
 
 //# sourceMappingURL=index.4d6bcbeb.js.map
