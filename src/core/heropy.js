@@ -56,7 +56,7 @@ export function createRouter(routes) {
 }
 
 
-///// Store /////
+///// Store : 각 요소별 데이터를 주고 받기 위해서 /////
 export class Store {
   constructor(state) {
     this.state = {} // 상태(데이터)
