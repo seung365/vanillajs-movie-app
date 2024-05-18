@@ -141,3 +141,13 @@ body{
 .movies .movie .info .title {
   color: var(--color-white);
 }
+
+.view-more {
+  width: 100%; /*최대한 늘어나*/
+  max-width: 300px; /*but 최대 300px*/
+  margin: 20px auto;
+  display: block;
+}
+.view-more.hide {
+  display: none;
+}
