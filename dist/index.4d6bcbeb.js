@@ -743,12 +743,41 @@ exports.default = (0, _heropy.createRouter)([
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _heropy = require("../core/heropy");
+var _headline = require("../components/Headline");
+var _headlineDefault = parcelHelpers.interopDefault(_headline);
 class Home extends (0, _heropy.Component) {
     render() {
-        this.el.innerHTML = "<h1>Hello world </h1>";
+        const headline = new (0, _headlineDefault.default)().el // 이렇게 메인페이지에 append를 통해 밀어넣을것..
+        ;
+        // 이렇게 하면 home 컴포넌트는 제일 먼저 container라는 클래스 가지는 div요소로 만들어진다.
+        this.el.classList.add("container");
+        this.el.append(headline);
     }
 }
 exports.default = Home;
+
+},{"../core/heropy":"57bZf","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../components/Headline":"gaVgo"}],"gaVgo":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _heropy = require("../core/heropy");
+class Headline extends (0, _heropy.Component) {
+    render() {
+        this.el.classList.add("headline");
+        this.el.innerHTML = /* html */ `
+      <h1>
+        <span>OMDb API</span><br>
+        THE OPEN<br>
+        MOVIE DATABASE
+      </h1>
+      <p>
+        The OMDb API is a RESTful web service to obtain movie information, 
+        all content and images on the site are contributed and maintained by our users.<br>
+        If you find this service useful, please consider making a one-time donation or become a patron.
+      </p>
+    `;
+    }
+}
+exports.default = Headline;
 
 },{"../core/heropy":"57bZf","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["anvqh","gLLPy"], "gLLPy", "parcelRequire6588")
 
