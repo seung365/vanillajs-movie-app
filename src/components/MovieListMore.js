@@ -10,7 +10,9 @@ export default class MoveListMore extends Component {
       // movieStore.state.page
       // movieStore.state.pageMax
       const { page, pageMax } = movieStore.state
-      pageMax > page ? this.el.classList.remove('hide') : this.el.classList.add('hide')
+      pageMax > page 
+        ? this.el.classList.remove('hide') 
+        : this.el.classList.add('hide')
     })
   }
   render() {
