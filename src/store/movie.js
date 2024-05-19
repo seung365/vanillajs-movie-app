@@ -6,6 +6,7 @@ const store = new Store({
   page: 1,
   pageMax: 1,
   movies: [],
+  movie: {}, // 영화의 상세 정보
   loading: false,
   message: 'Search for the movie title!'
 })
@@ -36,4 +37,13 @@ export const searchMovies = async page => {
     store.state.loading = false
   }
 
+}
+
+export const getMovieDetails = async id => {
+  try {
+    const res = await fetch(`https://omdbapi.com?apikey=7035c60c&i=${id}&plot=full`)
+    store.state.movie = await res.json()
+  } catch (error) {
+    console.log('getMovieDetails error:', error)
+  }
 }

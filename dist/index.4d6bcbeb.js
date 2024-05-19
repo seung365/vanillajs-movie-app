@@ -731,15 +731,21 @@ parcelHelpers.defineInteropFlag(exports);
 var _heropy = require("../core/heropy");
 var _home = require("./Home");
 var _homeDefault = parcelHelpers.interopDefault(_home);
+var _movie = require("./Movie");
+var _movieDefault = parcelHelpers.interopDefault(_movie);
 //route란 일반적으로 페이지를 말함
 exports.default = (0, _heropy.createRouter)([
     {
         path: "#/",
         component: (0, _homeDefault.default)
+    },
+    {
+        path: "#/movie",
+        component: (0, _movieDefault.default)
     }
 ]);
 
-},{"../core/heropy":"57bZf","./Home":"0JSNG","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"0JSNG":[function(require,module,exports) {
+},{"../core/heropy":"57bZf","./Home":"0JSNG","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./Movie":"1LTyN"}],"0JSNG":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _heropy = require("../core/heropy");
@@ -822,6 +828,7 @@ exports.default = Search;
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "searchMovies", ()=>searchMovies);
+parcelHelpers.export(exports, "getMovieDetails", ()=>getMovieDetails);
 var _search = require("../components/Search");
 var _searchDefault = parcelHelpers.interopDefault(_search);
 var _heropy = require("../core/heropy");
@@ -830,6 +837,7 @@ const store = new (0, _heropy.Store)({
     page: 1,
     pageMax: 1,
     movies: [],
+    movie: {},
     loading: false,
     message: "Search for the movie title!"
 });
@@ -858,6 +866,14 @@ const searchMovies = async (page)=>{
         console.log("searchMovies error:", error);
     } finally{
         store.state.loading = false;
+    }
+};
+const getMovieDetails = async (id)=>{
+    try {
+        const res = await fetch(`https://omdbapi.com?apikey=7035c60c&i=${id}&plot=full`);
+        store.state.movie = await res.json();
+    } catch (error) {
+        console.log("getMovieDetails error:", error);
     }
 };
 
@@ -958,6 +974,64 @@ class MoveListMore extends (0, _heropy.Component) {
     }
 }
 exports.default = MoveListMore;
+
+},{"../core/heropy":"57bZf","../store/movie":"kq1bo","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1LTyN":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _heropy = require("../core/heropy");
+var _movie = require("../store/movie");
+var _movieDefault = parcelHelpers.interopDefault(_movie);
+class Movie extends (0, _heropy.Component) {
+    async render() {
+        await (0, _movie.getMovieDetails)(history.state.id);
+        console.log((0, _movieDefault.default).state.movie);
+        const { movie } = (0, _movieDefault.default).state;
+        this.el.classList.add("container", "the-movie");
+        this.el.innerHTML = /* html */ `
+      <div 
+        style="background-image: url(${movie.Poster})"
+        class="poster"></div>
+      <div class="specs">
+        <div class="title">
+          ${movie.Title}
+        </div>
+        <div class="labels">
+          <span>${movie.Released}</span>
+          &nbsp;/&nbsp; 
+          <span>${movie.Runtime}</span>
+          &nbsp;/&nbsp;  
+          <span>${movie.Country}</span>
+        </div>
+        <div class="plot">
+          ${movie.Plot}
+        </div>
+        <div>
+          <h3>Ratings</h3>
+          ${movie.Ratings.map((rating)=>{
+            return `<p>${rating.Source} - ${rating.Value}</p>`;
+        }).join("")}  <!--join \u{D574}\u{C11C} \u{BB38}\u{C790} \u{B370}\u{C774}\u{D130}\u{B97C} -->
+        </div>
+        <div>
+          <h3>Actors</h3>
+          <p>${movie.Actors}</p>
+        </div>
+        <div>
+          <h3>Director</h3>
+          <p>${movie.Director}</p>
+        </div>
+        <div>
+          <h3>Production</h3>
+          <p>${movie.Production}</p>
+        </div>
+        <div>
+          <h3>Genre</h3>
+          <p>${movie.Genre}</p>
+        </div>
+      </div>
+    `;
+    }
+}
+exports.default = Movie;
 
 },{"../core/heropy":"57bZf","../store/movie":"kq1bo","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["anvqh","gLLPy"], "gLLPy", "parcelRequire6588")
 
