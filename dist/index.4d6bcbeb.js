@@ -751,7 +751,7 @@ class TheHeader extends (0, _heropy.Component) {
                     },
                     {
                         name: "About",
-                        href: "#about"
+                        href: "#/about"
                     }
                 ]
             }
@@ -795,6 +795,8 @@ exports.default = TheHeader;
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _heropy = require("../core/heropy");
+var _about = require("../store/about");
+var _aboutDefault = parcelHelpers.interopDefault(_about);
 class TheFooter extends (0, _heropy.Component) {
     constructor(){
         super({
@@ -802,14 +804,15 @@ class TheFooter extends (0, _heropy.Component) {
         });
     }
     render() {
+        const { github, repository } = (0, _aboutDefault.default).state;
         this.el.innerHTML = /* html */ `
       <div>
-        <a href="https://github.com/seung365/vanillajs-movie-app">
+        <a href="${repository}">
           GitHub Repository
         </a>
       </div>
       <div>
-        <a href="https://github.com/seung365">
+        <a href="${github}">
           ${new Date().getFullYear()}
           seung365
         </a>
@@ -819,6 +822,19 @@ class TheFooter extends (0, _heropy.Component) {
 }
 exports.default = TheFooter;
 
+},{"../core/heropy":"57bZf","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../store/about":"4RAJO"}],"4RAJO":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _heropy = require("../core/heropy");
+exports.default = new (0, _heropy.Store)({
+    photo: "https://avatars.githubusercontent.com/u/74394824?s=96&v=4",
+    name: "seung365 / BaekSeungBeom",
+    email: "bdh3659@naver.com",
+    velog: "https://velog.io/@seung365/posts",
+    github: "https://github.com/seung365",
+    repository: "https://github.com/seung365/vanillajs-movie-app"
+});
+
 },{"../core/heropy":"57bZf","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3L9mC":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
@@ -827,6 +843,8 @@ var _home = require("./Home");
 var _homeDefault = parcelHelpers.interopDefault(_home);
 var _movie = require("./Movie");
 var _movieDefault = parcelHelpers.interopDefault(_movie);
+var _about = require("./About");
+var _aboutDefault = parcelHelpers.interopDefault(_about);
 //route란 일반적으로 페이지를 말함
 exports.default = (0, _heropy.createRouter)([
     {
@@ -836,10 +854,14 @@ exports.default = (0, _heropy.createRouter)([
     {
         path: "#/movie",
         component: (0, _movieDefault.default)
+    },
+    {
+        path: "#/about",
+        component: (0, _aboutDefault.default)
     }
 ]);
 
-},{"../core/heropy":"57bZf","./Home":"0JSNG","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./Movie":"1LTyN"}],"0JSNG":[function(require,module,exports) {
+},{"../core/heropy":"57bZf","./Home":"0JSNG","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./Movie":"1LTyN","./About":"gdB30"}],"0JSNG":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _heropy = require("../core/heropy");
@@ -1139,6 +1161,29 @@ class Movie extends (0, _heropy.Component) {
 }
 exports.default = Movie;
 
-},{"../core/heropy":"57bZf","../store/movie":"kq1bo","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["anvqh","gLLPy"], "gLLPy", "parcelRequire6588")
+},{"../core/heropy":"57bZf","../store/movie":"kq1bo","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gdB30":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _heropy = require("../core/heropy");
+var _about = require("../store/about");
+var _aboutDefault = parcelHelpers.interopDefault(_about);
+class About extends (0, _heropy.Component) {
+    render() {
+        const { photo, name, email, github, velog } = (0, _aboutDefault.default).state;
+        this.el.classList.add("container", "about");
+        this.el.innerHTML = /* html */ `
+      <div
+        style="background-image: url(${photo})" 
+        class="photo"></div>
+      <p class="name">${name}</p>
+      <p><a href="mailto:${email}" target="_blank">${email}</a></p>
+      <p><a href="${github}" target="_blank">GitHub</a></p>
+      <p><a href="${velog}" target="_blank">velog</a></p>
+    `;
+    }
+}
+exports.default = About;
+
+},{"../core/heropy":"57bZf","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../store/about":"4RAJO"}]},["anvqh","gLLPy"], "gLLPy", "parcelRequire6588")
 
 //# sourceMappingURL=index.4d6bcbeb.js.map
