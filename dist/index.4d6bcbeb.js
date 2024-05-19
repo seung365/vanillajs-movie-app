@@ -829,22 +829,36 @@ const store = new (0, _heropy.Store)({
     searchText: "",
     page: 1,
     pageMax: 1,
-    movies: []
+    movies: [],
+    loading: false,
+    message: "Search for the movie title!"
 });
 exports.default = store;
 const searchMovies = async (page)=>{
+    store.state.loading = true;
     store.state.page = page;
-    if (page === 1) store.state.movies = [];
-    const res = await fetch(`https://omdbapi.com?apikey=7035c60c&s=${store.state.searchText}&page=${page}`) //s랑 page는 파라미터이다,
-    ;
-    const { Search, totalResults } = await res.json() // 구조 분해 할당
-    ;
-    store.state.movies = [
-        ...store.state.movies,
-        ...Search
-    ] // 이렇게 하면 movies에 데이터 정보가 갱신된다.
-    ;
-    store.state.pageMax = Math.ceil(Number(totalResults) / 10);
+    if (page === 1) {
+        store.state.movies = [];
+        store.state.message = "";
+    }
+    try {
+        const res = await fetch(`https://omdbapi.com?apikey=7035c60c&s=${store.state.searchText}&page=${page}`) //s랑 page는 파라미터이다,
+        ;
+        const { Search, totalResults, Response, Error } = await res.json() // 구조 분해 할당
+        ;
+        if (Response === "True") {
+            store.state.movies = [
+                ...store.state.movies,
+                ...Search
+            ] // 이렇게 하면 movies에 데이터 정보가 갱신된다.
+            ;
+            store.state.pageMax = Math.ceil(Number(totalResults) / 10);
+        } else store.state.message = Error;
+    } catch (error) {
+        console.log("searchMovies error:", error);
+    } finally{
+        store.state.loading = false;
+    }
 };
 
 },{"../components/Search":"jqPPz","../core/heropy":"57bZf","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8UDl3":[function(require,module,exports) {
@@ -861,17 +875,26 @@ class MovieList extends (0, _heropy.Component) {
         (0, _movieDefault.default).subscribe("movies", ()=>{
             this.render();
         });
+        (0, _movieDefault.default).subscribe("loading", ()=>{
+            this.render();
+        });
+        (0, _movieDefault.default).subscribe("message", ()=>{
+            this.render();
+        });
     }
     render() {
         this.el.classList.add("movie-list");
         this.el.innerHTML = /* html */ `
-      <div class="movies"></div>
+      ${(0, _movieDefault.default).state.message ? `<div class="message">${(0, _movieDefault.default).state.message}</div>` : '<div class="movies"></div>'}
+      <div class="the-loader hide"></div>
     `;
         const moviesEl = this.el.querySelector(".movies");
-        moviesEl.append(...(0, _movieDefault.default).state.movies.map((movie)=>new (0, _movieItemDefault.default)({
+        moviesEl?.append(...(0, _movieDefault.default).state.movies.map((movie)=>new (0, _movieItemDefault.default)({
                 movie
-            }).el) //map의 경우 함수를 실행한 결과를 모아 새로운 배열을 반환하고 append에 넣기 위해선 전개 연산자를 사용해야 한다.
+            }).el) // map의 경우 함수를 실행한 결과를 모아 새로운 배열을 반환하고 append에 넣기 위해선 전개 연산자를 사용해야 한다.
         );
+        const loaderEl = this.el.querySelector(".the-loader");
+        (0, _movieDefault.default).state.loading ? loaderEl.classList.remove("hide") : loaderEl.classList.add("hide");
     }
 }
 exports.default = MovieList;
@@ -929,6 +952,7 @@ class MoveListMore extends (0, _heropy.Component) {
         this.el.classList.add("btn", "view-more", "hide");
         this.el.textContent = "View more..";
         this.el.addEventListener("click", async ()=>{
+            this.el.classList.add("hide");
             await (0, _movie.searchMovies)((0, _movieDefault.default).state.page + 1);
         });
     }
