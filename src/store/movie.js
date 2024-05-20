@@ -23,7 +23,7 @@ export const searchMovies = async page => {
     const res = await fetch('/api/movie', {
       method: 'POST', //body에 정보를 담으려면 POST 사용
       body: JSON.stringify({
-        title:store.state.searchText,
+        title: store.state.searchText,
         page // page: page
       })
     })
